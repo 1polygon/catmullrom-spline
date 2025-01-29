@@ -47,9 +47,6 @@ export class SplineController {
             const x = 50 + (i / (this.numPoints - 1)) * (this.spline.canvas.clientWidth - 100.0);
             this.spline.points.push(new Vector2(x, this.spline.canvas.clientHeight * 0.5 + Math.sin((x / this.spline.canvas.clientWidth) * 20.0) * 150.0));
         }
-        if (this.closed) {
-            this.spline.points.push(this.spline.points[0]);
-        }
         this.spline.computeArcs();
     }
 
@@ -82,7 +79,7 @@ export class SplineController {
         }
     }
 
-    addSlider(name: string, value: number, min: number, max: number, steps: number, onChange: () => {}) {
+    addSlider(name: string, value: number, min: number, max: number, steps: number, onChange: (value: number) => void) {
         const prop = document.createElement("div");
         const row = document.createElement("div");
         row.className = "row";
@@ -93,26 +90,27 @@ export class SplineController {
 
         const val = document.createElement("div");
         val.className = "value";
-        val.textContent = value;
+        val.textContent = String(value);
         row.appendChild(val);
 
         prop.appendChild(row);
 
         const slider = document.createElement("input");
         slider.type = "range";
-        slider.value = value;
-        slider.step = steps;
-        slider.min = min;
-        slider.max = max;
+        slider.value = String(value);
+        slider.step = String(steps);
+        slider.min = String(min);
+        slider.max = String(max);
         slider.addEventListener("input", e => {
-            val.textContent = e.target.value;
-            onChange(e.target.value);
+            const value = (e.target as HTMLInputElement).value;
+            val.textContent = value;
+            onChange(parseFloat(value));
         });
         prop.appendChild(slider);
         this.ui.appendChild(prop);
     }
 
-    addCheckbox(name: string, value: boolean, onChange: () => {}) {
+    addCheckbox(name: string, value: boolean, onChange: (value: boolean) => void) {
         const prop = document.createElement("div");
         const row = document.createElement("div");
         row.className = "row";
@@ -127,7 +125,8 @@ export class SplineController {
         input.type = "checkbox";
         input.checked = value;
         input.addEventListener("input", e => {
-            onChange(e.target.checked);
+            const value = (e.target as HTMLInputElement).checked;
+            onChange(value);
         });
         prop.appendChild(input);
         this.ui.appendChild(prop);

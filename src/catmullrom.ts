@@ -95,7 +95,7 @@ export class CatmullRomSpline {
         this.ctx.beginPath();
         this.ctx.arc(location.x, location.y, 5, 0, 360);
         this.ctx.fill();
-        this.ctx.fillText(Math.round(this.alpha * 100) / 100, location.x - 10, location.y - 10);
+        this.ctx.fillText(String(Math.round(this.alpha * 100) / 100), location.x - 10, location.y - 10);
 
         if (this.running) {
             requestAnimationFrame(this.#tick.bind(this));
